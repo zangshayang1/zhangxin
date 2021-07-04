@@ -9,7 +9,7 @@ public class CountDownLatchDemo {
 
   public static void main(String[] args) throws InterruptedException {
     startTogether();
-//    finishTogether();
+    //    finishTogether();
   }
 
   private static void startTogether() {
@@ -22,8 +22,8 @@ public class CountDownLatchDemo {
 
     for (int i = 0; i < concurrency; i++) {
       new Thread(new Runnable() {
-        @Override
-        public void run() {
+
+        @Override public void run() {
 
           // prepare itself
           try {
@@ -32,8 +32,7 @@ public class CountDownLatchDemo {
             e1.printStackTrace();
           }
 
-          System.out.println(
-              Thread.currentThread().getName() + " Prepare...done.");
+          System.out.println(Thread.currentThread().getName() + " Prepare...done.");
 
           // signal to everyone else that I am ready
           countDownLatch.countDown();
@@ -53,61 +52,59 @@ public class CountDownLatchDemo {
     }
   }
 
-	private static class Job implements Runnable {
+  private static class Job implements Runnable {
 
-		private int taskNo;
-		private int[] arr;
-		private int startIndex, endIndex;
-		private CountDownLatch cdl;
+    private int taskNo;
+    private int[] arr;
+    private int startIndex, endIndex;
+    private CountDownLatch cdl;
 
-		Job(int taskNo, int[] arr, int startIndex, int endIndex, CountDownLatch cdl) {
-			super();
-			this.taskNo = taskNo;
-			this.arr = arr;
-			this.startIndex = startIndex;
-			this.endIndex = endIndex;
-			this.cdl = cdl;
-		}
+    Job(int taskNo, int[] arr, int startIndex, int endIndex, CountDownLatch cdl) {
+      super();
+      this.taskNo = taskNo;
+      this.arr = arr;
+      this.startIndex = startIndex;
+      this.endIndex = endIndex;
+      this.cdl = cdl;
+    }
 
-		@Override
-		public void run() {
-			Random rd = new Random();
-			for (int i = startIndex; i <= endIndex; i++) {
-				arr[i] = rd.nextInt();
-			}
-			System.out.println("task-" + taskNo + " done.");
-			cdl.countDown();
-		}
-	}
+    @Override public void run() {
+      Random rd = new Random();
+      for (int i = startIndex; i <= endIndex; i++) {
+        arr[i] = rd.nextInt();
+      }
+      System.out.println("task-" + taskNo + " done.");
+      cdl.countDown();
+    }
+  }
 
-	private static void finishTogether() throws InterruptedException {
+  private static void finishTogether() throws InterruptedException {
 
-		int targetSize = 10_000_000;
-		final int[] targetArray = new int[targetSize];
+    int targetSize = 10_000_000;
+    final int[] targetArray = new int[targetSize];
 
-		int segmentSize = 100_000;
+    int segmentSize = 100_000;
 
-		int jobNum = targetSize / segmentSize;
+    int jobNum = targetSize / segmentSize;
 
-		ExecutorService threadPool = Executors.newFixedThreadPool(6);
+    ExecutorService threadPool = Executors.newFixedThreadPool(6);
 
-		CountDownLatch cdl = new CountDownLatch(jobNum);
+    CountDownLatch cdl = new CountDownLatch(jobNum);
 
-		for (int i = 0; i < jobNum; i++) {
-			threadPool.execute(new Job(i, targetArray,
-          i * segmentSize, (i + 1) * segmentSize - 1, cdl));
-		}
+    for (int i = 0; i < jobNum; i++) {
+      threadPool.execute(new Job(i, targetArray, i * segmentSize, (i + 1) * segmentSize - 1, cdl));
+    }
 
-		System.out.println("Tasks assigned to multiple threads.");
+    System.out.println("Tasks assigned to multiple threads.");
 
-		long s1 = System.currentTimeMillis();
+    long s1 = System.currentTimeMillis();
 
-		cdl.await();
-		// once CountDownLatch is down to 0, this object can not be reset or re-used.
+    cdl.await();
+    // once CountDownLatch is down to 0, this object can not be reset or re-used.
 
-		System.out.println("All tasks done. Time took: " + (System.currentTimeMillis() - s1));
+    System.out.println("All tasks done. Time took: " + (System.currentTimeMillis() - s1));
 
-		threadPool.shutdown();
+    threadPool.shutdown();
 
     System.out.println("------------------------");
 
@@ -118,6 +115,6 @@ public class CountDownLatchDemo {
       targetArray[i] = rd.nextInt();
     }
     System.out.println("Without concurrency, it took: " + (System.currentTimeMillis() - s1));
-	}
+  }
 
 }

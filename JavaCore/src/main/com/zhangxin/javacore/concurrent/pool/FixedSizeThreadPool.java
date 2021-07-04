@@ -15,27 +15,26 @@ public class FixedSizeThreadPool {
   private volatile boolean workingFlag = true; // violatile -> no dirty read
 
   public FixedSizeThreadPool(int workerPoolSize, int taskQueueSize) {
-    if(workerPoolSize <=0 || taskQueueSize <= 0){
-        throw new IllegalArgumentException("Illegal Argument.");
+    if (workerPoolSize <= 0 || taskQueueSize <= 0) {
+      throw new IllegalArgumentException("Illegal Argument.");
     }
 
     this.taskQueue = new LinkedBlockingQueue<>(taskQueueSize);
     this.workers = Collections.synchronizedList(new ArrayList<>(workerPoolSize));
 
-    for(int i = 0; i < workerPoolSize; i++){
-        this.workers.add(new Worker());
+    for (int i = 0; i < workerPoolSize; i++) {
+      this.workers.add(new Worker());
     }
     // change thread state: NEW -> RUNNABLE, ready to run task.
     this.workers.forEach(Worker::start);
   }
 
-  public void shutdown(){
+  public void shutdown() {
     this.workingFlag = false;
 
-    for(Thread w : this.workers){
-      if(w.getState().equals(Thread.State.BLOCKED)
-          || w.getState().equals(Thread.State.WAITING)
-          || w.getState().equals(Thread.State.TIMED_WAITING)){
+    for (Thread w : this.workers) {
+      if (w.getState().equals(Thread.State.BLOCKED) || w.getState().equals(Thread.State.WAITING)
+          || w.getState().equals(Thread.State.TIMED_WAITING)) {
         // What if some blocking threads are in the middle of executing some task?
         // Does this function shutdown the whole thing before completing all the tasks?
         // Note that take() throws InterruptedException when interrupted. Actually all blocking methods do.
@@ -46,7 +45,7 @@ public class FixedSizeThreadPool {
     }
   }
 
-  public boolean submit(Runnable task){
+  public boolean submit(Runnable task) {
     if (this.workingFlag) {
       return this.taskQueue.offer(task); // offer returns false when the queue is full
     }
@@ -55,14 +54,15 @@ public class FixedSizeThreadPool {
 
   private class Worker extends Thread {
 
-    public Worker() {}
+    public Worker() {
+    }
 
     public void run() {
       int taskCount = 0;
 
       // take() task out of the queue when workingFlag is true
       // otherwise, only poll() from queue when there are tasks remaining in the queue
-      while(workingFlag || taskQueue.size() > 0){
+      while (workingFlag || taskQueue.size() > 0) {
         Runnable task = null;
         try {
           if (workingFlag) {
@@ -80,23 +80,24 @@ public class FixedSizeThreadPool {
           e.printStackTrace();
         }
 
-        if(task != null) {
+        if (task != null) {
           try {
             task.run();
-            System.out.println(Thread.currentThread().getName() + " done with" + (++ taskCount) + " tasks.");
-          } catch (Exception e){
+            System.out.println(
+                Thread.currentThread().getName() + " done with" + (++taskCount) + " tasks.");
+          } catch (Exception e) {
             e.printStackTrace();
           }
         }
       }
-      System.out.println(Thread.currentThread().getName()  + " end.");
+      System.out.println(Thread.currentThread().getName() + " end.");
     }
   }
 
   public static void main(String[] args) {
-    FixedSizeThreadPool pool = new FixedSizeThreadPool(3,6);
+    FixedSizeThreadPool pool = new FixedSizeThreadPool(3, 6);
 
-    for (int i = 0; i < 6; i++){
+    for (int i = 0; i < 6; i++) {
       pool.submit(() -> {   // Runnable
         System.out.println("Task execution starts...");
         try {

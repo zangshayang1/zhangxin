@@ -5,12 +5,14 @@ public class InterruptStateDemo {
   static volatile boolean flag = true;
 
   public static void main(String[] args) throws InterruptedException {
-    Thread t1 = new Thread(()-> {
-      while(flag) { }
+    Thread t1 = new Thread(() -> {
+      while (flag) {
+      }
 
       System.out.println("From internal - is interrupted(): " + Thread.interrupted());
 
-      while(!flag) { }
+      while (!flag) {
+      }
 
     });
 

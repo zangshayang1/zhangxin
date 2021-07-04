@@ -29,10 +29,11 @@ public class StopUnsafeDemo {
   static User user = new User();
 
   static class User {
+
     private int id1;
     private int id2;
 
-    User(){
+    User() {
       id1 = 0;
       id2 = 0;
     }
@@ -53,19 +54,20 @@ public class StopUnsafeDemo {
       this.id2 = id2;
     }
 
-    public String toString(){
-        return "User [id1="+ id1 +",id2="+ id2 +"]";
+    public String toString() {
+      return "User [id1=" + id1 + ",id2=" + id2 + "]";
     }
   }
 
   static class changeObjectThread extends Thread {
-    public void run(){
+
+    public void run() {
       int attempt = 3;
-      while(attempt > 0) {
+      while (attempt > 0) {
         attempt--;
         synchronized (user) {
 
-          int v = (int)(System.currentTimeMillis() / 1000);
+          int v = (int) (System.currentTimeMillis() / 1000);
 
           user.setId1(v);
 
@@ -84,13 +86,14 @@ public class StopUnsafeDemo {
     }
   }
 
-  static class ReadObjectThread extends Thread{
-    public void run(){
+  static class ReadObjectThread extends Thread {
+
+    public void run() {
       int attempt = 300;
-      while(attempt > 0){
+      while (attempt > 0) {
         attempt--;
         synchronized (user) {
-          if(user.getId1() != user.getId2()){
+          if (user.getId1() != user.getId2()) {
             System.out.println(user.toString());
           }
         }

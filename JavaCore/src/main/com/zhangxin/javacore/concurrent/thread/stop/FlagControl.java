@@ -12,7 +12,7 @@ public class FlagControl {
           Thread.sleep(1000L);
         }
       } catch (InterruptedException e) {
-          e.printStackTrace();
+        e.printStackTrace();
       }
     }).start();
 

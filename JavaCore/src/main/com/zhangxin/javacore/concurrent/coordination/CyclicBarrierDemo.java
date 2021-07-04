@@ -11,48 +11,47 @@ public class CyclicBarrierDemo {
 
   public static void main(String[] args) {
     startTogether();
-//    multiStageStartTogether();
+    //    multiStageStartTogether();
   }
 
-	private static void startTogether() {
+  private static void startTogether() {
 
     int concurrency = 100;
 
-		CyclicBarrier cb = new CyclicBarrier(10, new Runnable() {
+    CyclicBarrier cb = new CyclicBarrier(10, new Runnable() {
 
-			@Override
-			public void run() {
-				System.out.println("Hit specified number of parties, trigger barrier runnable");
-				batch++;
+      @Override public void run() {
+        System.out.println("Hit specified number of parties, trigger barrier runnable");
+        batch++;
         System.out.println("Batch - " + batch);
-			}
-		});
+      }
+    });
 
-		for (int i = 0; i < concurrency; i++) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					// prepare itself
-					try {
-						Thread.sleep(RANDOM.nextInt(10000));
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
+    for (int i = 0; i < concurrency; i++) {
+      new Thread(new Runnable() {
 
-					System.out.println(Thread.currentThread().getName() + " Ready");
+        @Override public void run() {
+          // prepare itself
+          try {
+            Thread.sleep(RANDOM.nextInt(10000));
+          } catch (InterruptedException e1) {
+            e1.printStackTrace();
+          }
 
-					try {
-						cb.await();
-					} catch (InterruptedException | BrokenBarrierException e) {
-						e.printStackTrace();
-						return;
-					}
+          System.out.println(Thread.currentThread().getName() + " Ready");
 
-					System.out.println(Thread.currentThread().getName() + " Done");
-				}
-			}).start();
-		}
-	}
+          try {
+            cb.await();
+          } catch (InterruptedException | BrokenBarrierException e) {
+            e.printStackTrace();
+            return;
+          }
+
+          System.out.println(Thread.currentThread().getName() + " Done");
+        }
+      }).start();
+    }
+  }
 
   private static int STAGE = 0;
 
@@ -61,8 +60,8 @@ public class CyclicBarrierDemo {
     int partyNum = 3;
 
     final CyclicBarrier cb = new CyclicBarrier(partyNum, new Runnable() {
-      @Override
-      public void run() {
+
+      @Override public void run() {
         switch (STAGE) {
           case 0:
             System.out.println("********** STAGE 0: Every one is at the company **********");
@@ -81,8 +80,8 @@ public class CyclicBarrierDemo {
 
     for (int i = 0; i < partyNum; i++) {
       new Thread(new Runnable() {
-        @Override
-        public void run() {
+
+        @Override public void run() {
 
           String staff = "[" + Thread.currentThread().getName() + "]";
 

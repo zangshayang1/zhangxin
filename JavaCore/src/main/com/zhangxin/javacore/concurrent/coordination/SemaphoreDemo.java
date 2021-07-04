@@ -18,8 +18,8 @@ public class SemaphoreDemo {
 
     for (int i = 0; i < THREAD_NUM; i++) {
       new Thread(new Runnable() {
-        @Override
-        public void run() {
+
+        @Override public void run() {
           try {
             Thread.sleep(RANDOM.nextInt(5000));
             useCar();
@@ -35,7 +35,8 @@ public class SemaphoreDemo {
     System.out.println(Thread.currentThread().getName() + " want to use a shared car.");
     long s = System.currentTimeMillis();
     SEMAPHORE.acquire();
-    System.out.println(Thread.currentThread().getName() + " got a shared car within (ms)" + (System.currentTimeMillis() - s));
+    System.out.println(Thread.currentThread().getName() + " got a shared car within (ms)" + (
+        System.currentTimeMillis() - s));
 
     try {
       Thread.sleep(RANDOM.nextInt(10000));

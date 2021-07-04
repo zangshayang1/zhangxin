@@ -7,22 +7,22 @@ import java.util.Random;
 
 public class DataGenerator {
 
-	public static final String USER_DIR = System.getProperty("user.dir");
-	public static final String INPUT_FILENAME = "random-number.data";
+  public static final String USER_DIR = System.getProperty("user.dir");
+  public static final String INPUT_FILENAME = "random-number.data";
 
-	public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException {
 
-		Random random = new Random();
+    Random random = new Random();
 
-		try (PrintWriter out = new PrintWriter(new File(USER_DIR + File.separator + INPUT_FILENAME))) {
-			for (int i = 0; i < 1_000_000; i++) {
+    try (PrintWriter out = new PrintWriter(new File(USER_DIR + File.separator + INPUT_FILENAME))) {
+      for (int i = 0; i < 1_000_000; i++) {
 
-				out.println(random.nextInt());
+        out.println(random.nextInt());
 
-				if (i % 10000 == 0)
-					out.flush();
-			}
-		}
-	}
+        if (i % 10000 == 0)
+          out.flush();
+      }
+    }
+  }
 
 }
