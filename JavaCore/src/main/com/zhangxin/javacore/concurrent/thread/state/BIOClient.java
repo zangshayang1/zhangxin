@@ -8,35 +8,34 @@ import java.util.Scanner;
 
 public class BIOClient implements Runnable {
 
-	private String host;
+  private String host;
 
-	private int port;
+  private int port;
 
-	private Charset charset = Charset.forName("UTF-8");
+  private Charset charset = Charset.forName("UTF-8");
 
-	public BIOClient(String host, int port) {
-		super();
-		this.host = host;
-		this.port = port;
-	}
+  public BIOClient(String host, int port) {
+    super();
+    this.host = host;
+    this.port = port;
+  }
 
-	@Override
-	public void run() {
-		try (Socket s = new Socket(host, port); OutputStream out = s.getOutputStream();) {
+  @Override public void run() {
+    try (Socket s = new Socket(host, port); OutputStream out = s.getOutputStream();) {
 
-			Scanner scanner = new Scanner(System.in);
-			System.out.println("Please provide input data: ");
-			String mess = scanner.nextLine();
-			out.write(mess.getBytes(charset));
+      Scanner scanner = new Scanner(System.in);
+      System.out.println("Please provide input data: ");
+      String mess = scanner.nextLine();
+      out.write(mess.getBytes(charset));
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
-	public static void main(String[] args) {
-		BIOClient client = new BIOClient("localhost", 9000);
-		client.run();
-	}
+  public static void main(String[] args) {
+    BIOClient client = new BIOClient("localhost", 9000);
+    client.run();
+  }
 
 }
