@@ -2,18 +2,27 @@ package com.zhangxin.javacore.concurrent.thread.interrupt;
 
 public class InterruptStateDemo {
 
-  static volatile boolean flag = true;
+  private static volatile boolean flag = true;
 
   public static void main(String[] args) throws InterruptedException {
     Thread t1 = new Thread(() -> {
-      while (flag) {
-      }
+
+      while (flag);
 
       System.out.println("From internal - is interrupted(): " + Thread.interrupted());
 
-      while (!flag) {
+      while (!flag);
+
+      System.out.println("Note that the attempt to interrupt the thread hasn't been successful so far.");
+
+      try {
+        System.out.println("Thread state before calling sleep(): " + Thread.currentThread().getState());
+        Thread.sleep(5000L);
+      } catch (InterruptedException e) {
+        System.out.println("Another attempt to interrupt the thread in WAITING state succeeded.");
       }
 
+      System.out.println("t1 done. ");
     });
 
     t1.start();
@@ -35,6 +44,9 @@ public class InterruptStateDemo {
     System.out.println("After sleep - is interrupted(): " + t1.isInterrupted());
 
     flag = true;
-    System.out.println("t1 done. ");
+
+    Thread.sleep(100L);
+    System.out.println("Thread state after calling sleep(): " + t1.getState());
+    t1.interrupt();
   }
 }

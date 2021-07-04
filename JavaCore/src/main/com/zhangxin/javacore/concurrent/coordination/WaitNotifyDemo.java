@@ -4,7 +4,6 @@ public class WaitNotifyDemo {
 
   private static int i = 0;
   private final static Object OBJECT = new Object();
-
   private static int limit = 20;
 
   public static void main(String[] args) throws Throwable {
