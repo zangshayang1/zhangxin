@@ -20,19 +20,22 @@ public class AtomicFieldUpdaterDemo {
 
   public static void main(String[] args) throws InterruptedException {
     int threads = 20;
-    CountDownLatch cdl = new CountDownLatch(threads);
+    final CountDownLatch cdl = new CountDownLatch(threads);
 
-    DemoBean demoBean = new DemoBean();
-    AtomicIntegerFieldUpdater<DemoBean> atomicIntegerFieldUpdater = AtomicIntegerFieldUpdater
+    final DemoBean demoBean = new DemoBean();
+    final AtomicIntegerFieldUpdater<DemoBean> atomicIntegerFieldUpdater = AtomicIntegerFieldUpdater
         .newUpdater(DemoBean.class, "num");
 
     for (int i = 0; i < threads; i++) {
-      new Thread(() -> {
-        for (int j = 0; j < 10000; j++) {
-          // use the same updater for the same object
-          atomicIntegerFieldUpdater.incrementAndGet(demoBean);
+      new Thread(new Runnable() {
+
+        @Override public void run() {
+          for (int j = 0; j < 10000; j++) {
+            // use the same updater for the same object
+            atomicIntegerFieldUpdater.incrementAndGet(demoBean);
+          }
+          cdl.countDown();
         }
-        cdl.countDown();
       }).start();
     }
 
