@@ -5,11 +5,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ReentrantLockDemo {
 
-    static volatile int count = 0;
+    private static volatile int count = 0;
 
-    static ReentrantLock lock = new ReentrantLock();
+    private static MyReentrantLockImpl lock = new MyReentrantLockImpl();
 
-    public static void increase() {
+    private static void increase() {
         lock.lock();
         try {
             count++;
