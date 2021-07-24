@@ -140,7 +140,9 @@ public class MyReentrantLockImpl implements Lock {
       throw new RuntimeException("Only the lock owner can invoke unlock.");
     }
 
-    // clear owner first and then set state to 0
+    // clear owner first and then set state to 0, the order can not be reversed because
+    // other thread will be able to get the lock and set the owner as soon as state became 0
+    // if all of that happen before set owner to null, it will be thread-unsafe.
     int s = state.get() - 1;
     if (s == 0) {
       owner = null;
